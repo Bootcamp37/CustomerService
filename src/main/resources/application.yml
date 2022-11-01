@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    config:
+      profile: default
+  config:
+    import: optional:configserver:localhost:8888
+  application:
+    name: customer-service
+  data:
+    mongodb:
+      database: db_customer
+      host: localhost
+      port: 27017
+server:
+  port: 8089
+management:
+  endpoint:
+    web:
+      exposure:
+        include: "*"
+message:
+  path-customer: /api/v1/customers
+  path-customerType: /api/v1/customerType
