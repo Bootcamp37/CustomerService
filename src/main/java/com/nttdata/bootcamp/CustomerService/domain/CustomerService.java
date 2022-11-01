@@ -2,7 +2,7 @@ package com.nttdata.bootcamp.CustomerService.domain;
 
 import com.nttdata.bootcamp.CustomerService.domain.dto.CustomerRequest;
 import com.nttdata.bootcamp.CustomerService.domain.dto.CustomerResponse;
-import com.nttdata.bootcamp.CustomerService.domain.mapper.ICustomerMapper;
+import com.nttdata.bootcamp.CustomerService.infraestructure.ICustomerMapper;
 import com.nttdata.bootcamp.CustomerService.infraestructure.ICustomerRepository;
 import com.nttdata.bootcamp.CustomerService.infraestructure.ICustomerService;
 import lombok.RequiredArgsConstructor;

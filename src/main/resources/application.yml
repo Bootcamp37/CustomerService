@@ -1,9 +1,7 @@
 spring:
-  cloud:
-    config:
-      profile: default
   config:
-    import: optional:configserver:localhost:8888
+    import:
+    - optional:configserver:http://localhost:8888
   application:
     name: customer-service
   data:
@@ -12,7 +10,7 @@ spring:
       host: localhost
       port: 27017
 server:
-  port: 8089
+  port: 8080
 management:
   endpoint:
     web:
