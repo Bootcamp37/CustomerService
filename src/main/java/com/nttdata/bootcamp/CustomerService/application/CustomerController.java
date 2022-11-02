@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,29 +21,35 @@ public class CustomerController {
     @Autowired
     private ICustomerService service;
 
-    @GetMapping
+    @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Flux<CustomerResponse> getAll() {
         return service.getAll();
     }
 
     @GetMapping(path = "/{id}")
-    public Mono<CustomerResponse> getById(@PathVariable String id) {
-        return service.getById(id);
+    @ResponseBody
+    public ResponseEntity<Mono<CustomerResponse>> getById(@PathVariable String id) {
+        Mono<CustomerResponse> customerResponseMono = service.getById(id);
+        return new ResponseEntity<>(customerResponseMono, customerResponseMono != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Mono<CustomerResponse> save(@RequestBody CustomerRequest request) {
-        return service.save(request);
+        return service.save(Mono.just(request));
     }
 
     @PutMapping("/update/{id}")
     public Mono<CustomerResponse> update(@RequestBody CustomerRequest request, @PathVariable String id) {
-        return service.update(request, id);
+        return service.update(Mono.just(request), id);
     }
 
     @DeleteMapping("/delete/{id}")
-    public Mono<CustomerResponse> delete(@PathVariable String id) {
-        return service.delete(id);
+    public Mono<ResponseEntity<Void>> delete(@PathVariable String id) {
+        return service.delete(id)
+                .map(r -> ResponseEntity.ok().<Void>build())
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 }
