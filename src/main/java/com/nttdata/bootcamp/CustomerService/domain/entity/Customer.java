@@ -16,4 +16,5 @@ public class Customer {
     private String firstname;
     private String lastname;
     private CustomerType customerType;
+    private CustomerSubType subType = null;
 }
