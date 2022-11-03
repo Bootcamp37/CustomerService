@@ -1,27 +1,29 @@
 package com.nttdata.bootcamp.CustomerService.domain;
 
 import com.nttdata.bootcamp.CustomerService.domain.dto.CustomerRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Predicate;
 
 @Component
+@Slf4j
 public class CustomerValidate implements Predicate<CustomerRequest> {
     @Override
     public boolean test(@NotNull CustomerRequest request) {
-        // Valida que el nombre y el apellido no estan en blanco
+        log.debug("====> CustomerValidate: Test");
         return validateFirstname(request.getLastname()) &&
                 validateLastname(request.getFirstname());
     }
 
     public boolean validateFirstname(@NotNull String firstname) {
-        // Si el nombre esta en blanco retorna false
+        log.debug("====> CustomerValidate: ValidateFirstname");
         return !firstname.isBlank();
     }
 
     public boolean validateLastname(@NotNull String lastname) {
-        // Si el apellido esta en blanco retorna false
+        log.debug("====> CustomerValidate: ValidateLastname");
         return !lastname.isBlank();
     }
 }

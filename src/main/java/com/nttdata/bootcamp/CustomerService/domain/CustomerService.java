@@ -6,6 +6,7 @@ import com.nttdata.bootcamp.CustomerService.infraestructure.ICustomerMapper;
 import com.nttdata.bootcamp.CustomerService.infraestructure.ICustomerRepository;
 import com.nttdata.bootcamp.CustomerService.infraestructure.ICustomerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -13,6 +14,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomerService implements ICustomerService {
     @Autowired
     private final ICustomerRepository repository;
@@ -23,67 +25,60 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public Flux<CustomerResponse> getAll() {
-        // Retorna todos los elemntos de la bd
+        log.debug("====> CustomerService: GetAll");
         return repository.findAll()
-                // convierte todos los entity en response
                 .map(mapper::toResponse);
     }
 
     @Override
     public Mono<CustomerResponse> getById(String id) {
-        // Retorna el elemento que tenga el id
+        log.debug("====> CustomerService: GetById");
         return repository.findById(id)
-                // convierte el entity en response
                 .map(mapper::toResponse)
-                // si no existe elemento retorna error
                 .switchIfEmpty(Mono.error(RuntimeException::new));
     }
 
     @Override
     public Mono<CustomerResponse> save(Mono<CustomerRequest> request) {
-        // Valida el request
-        return request.filter(validate)
-                // Convierte el request en entity
+        log.debug("====> CustomerService: Save");
+        return request.map(this::printDebug)
+                .filter(validate)
                 .map(mapper::toEntity)
-                // Guarda el entity en el repository
                 .flatMap(repository::save)
-                // Convierte el entity en response
                 .map(mapper::toResponse)
-                // Si no es valido retorna error
                 .switchIfEmpty(Mono.error(RuntimeException::new));
     }
 
     @Override
     public Mono<CustomerResponse> update(Mono<CustomerRequest> request, String id) {
-        // Validar el request
-        return request.filter(validate)
-                // Si no es valido retorna error
-                .switchIfEmpty(Mono.error(RuntimeException::new))
+        log.debug("====> CustomerService: Update");
+        return request.map(this::printDebug)
+                .filter(validate)
                 .flatMap(item ->
                         // Busca si exite el objeto
                         repository.findById(id)
-                                // Si existe el elemento convertimos el objeto request a entity
-                                .map(element -> mapper.toEntity(item))
-                                // Agregamos el id en el entity
-                                .doOnNext(e -> e.setId(id))
-                                // guarda el entity en el repository
-                                .flatMap(repository::save)
-                                // convierte el entity en response
-                                .map(mapper::toResponse)
-                                // Si no existe retorna error
                                 .switchIfEmpty(Mono.error(RuntimeException::new))
-                );
+                                .map(e -> item)
+                )
+                .map(mapper::toEntity)
+                .doOnNext(e -> e.setId(id))
+                .flatMap(repository::save)
+                .map(mapper::toResponse)
+                .switchIfEmpty(Mono.error(RuntimeException::new));
     }
 
     @Override
     public Mono<CustomerResponse> delete(String id) {
-        // Retorna el elemento que tenga el id
+        log.debug("====> CustomerService: Delete");
         return repository.findById(id)
-                // Si no existe un elemento retorna error
                 .switchIfEmpty(Mono.error(RuntimeException::new))
-                // elimina el objeto
                 .flatMap(deleteCustomer -> repository.delete(deleteCustomer)
-                        // Devuelve el objeto borrado
                         .then(Mono.just(mapper.toResponse(deleteCustomer))));
+    }
+
+    public CustomerRequest printDebug(CustomerRequest request){
+        log.debug("====> CustomerService: printDebug");
+        log.debug("====> CustomerService: Request ==> " + request.toString());
+        return request;
     }
 }
