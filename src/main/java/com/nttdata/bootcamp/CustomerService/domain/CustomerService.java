@@ -25,14 +25,14 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public Flux<CustomerResponse> getAll() {
-        log.debug("====> CustomerService: GetAll");
+        log.info("====> CustomerService: GetAll");
         return repository.findAll()
                 .map(mapper::toResponse);
     }
 
     @Override
     public Mono<CustomerResponse> getById(String id) {
-        log.debug("====> CustomerService: GetById");
+        log.info("====> CustomerService: GetById");
         return repository.findById(id)
                 .map(mapper::toResponse)
                 .switchIfEmpty(Mono.error(RuntimeException::new));
@@ -40,7 +40,7 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public Mono<CustomerResponse> save(Mono<CustomerRequest> request) {
-        log.debug("====> CustomerService: Save");
+        log.info("====> CustomerService: Save");
         return request.map(this::printDebug)
                 .filter(validate)
                 .map(mapper::toEntity)
@@ -51,7 +51,7 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public Mono<CustomerResponse> update(Mono<CustomerRequest> request, String id) {
-        log.debug("====> CustomerService: Update");
+        log.info("====> CustomerService: Update");
         return request.map(this::printDebug)
                 .filter(validate)
                 .flatMap(item ->
@@ -69,16 +69,16 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public Mono<CustomerResponse> delete(String id) {
-        log.debug("====> CustomerService: Delete");
+        log.info("====> CustomerService: Delete");
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(RuntimeException::new))
                 .flatMap(deleteCustomer -> repository.delete(deleteCustomer)
                         .then(Mono.just(mapper.toResponse(deleteCustomer))));
     }
 
-    public CustomerRequest printDebug(CustomerRequest request){
-        log.debug("====> CustomerService: printDebug");
-        log.debug("====> CustomerService: Request ==> " + request.toString());
+    public CustomerRequest printDebug(CustomerRequest request) {
+        log.info("====> CustomerService: printDebug");
+        log.info("====> CustomerService: Request ==> " + request.toString());
         return request;
     }
 }

@@ -20,7 +20,7 @@ public class CustomerTypeController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Flux<CustomerType> getAll() {
-        log.debug("====> CustomerTypeController: GetAll");
+        log.info("====> CustomerTypeController: GetAll");
         return Flux.fromArray(CustomerType.values());
     }
 }

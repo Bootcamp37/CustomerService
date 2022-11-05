@@ -9,6 +9,10 @@ spring:
   data:
     mongodb:
       uri: mongodb://db_customer:27017/db_customer
+eureka:
+  client:
+    service-url:
+      defaultZone: http://ms-discovery:8889/eureka/
 management:
   endpoint:
     web:
@@ -17,3 +21,6 @@ management:
 message:
   path-customer: /api/v1/customers
   path-customerType: /api/v1/customerType
+logging:
+  level:
+    com.nttdata.bootcamp.CustomerService: DEBUG

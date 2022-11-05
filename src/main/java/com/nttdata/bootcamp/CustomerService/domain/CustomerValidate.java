@@ -12,18 +12,18 @@ import java.util.function.Predicate;
 public class CustomerValidate implements Predicate<CustomerRequest> {
     @Override
     public boolean test(@NotNull CustomerRequest request) {
-        log.debug("====> CustomerValidate: Test");
+        log.info("====> CustomerValidate: Test");
         return validateFirstname(request.getLastname()) &&
                 validateLastname(request.getFirstname());
     }
 
     public boolean validateFirstname(@NotNull String firstname) {
-        log.debug("====> CustomerValidate: ValidateFirstname");
+        log.info("====> CustomerValidate: ValidateFirstname");
         return !firstname.isBlank();
     }
 
     public boolean validateLastname(@NotNull String lastname) {
-        log.debug("====> CustomerValidate: ValidateLastname");
+        log.info("====> CustomerValidate: ValidateLastname");
         return !lastname.isBlank();
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class CustomerMapper implements ICustomerMapper {
     @Override
     public Customer toEntity(@NotNull CustomerRequest request) {
-        log.debug("====> CustomerMapper: ToEntity");
+        log.info("====> CustomerMapper: ToEntity");
         Customer customer = new Customer();
         BeanUtils.copyProperties(request, customer);
         return customer;
@@ -22,7 +22,7 @@ public class CustomerMapper implements ICustomerMapper {
 
     @Override
     public CustomerResponse toResponse(@NotNull Customer customer) {
-        log.debug("====> CustomerMapper: ToResponse");
+        log.info("====> CustomerMapper: ToResponse");
         CustomerResponse customerResponse = new CustomerResponse();
         BeanUtils.copyProperties(customer, customerResponse);
         return customerResponse;
