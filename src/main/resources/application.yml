@@ -23,4 +23,4 @@ message:
   path-customerType: /api/v1/customerType
 logging:
   level:
-    com.nttdata.bootcamp.CustomerService: DEBUG
+    com.nttdata.bootcamp.customerservice: DEBUG
