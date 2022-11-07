@@ -9,10 +9,6 @@ spring:
   data:
     mongodb:
       uri: mongodb+srv://admin:5K8yj70q4RpuiBSE@bootcamp37.anglhbu.mongodb.net/db_customer
-eureka:
-  client:
-    service-url:
-      defaultZone: https://ms-discovery.azurewebsites.net/eureka/
 management:
   endpoint:
     web:
